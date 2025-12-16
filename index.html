@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바이브 코딩 - AI와 함께하는 새로운 코딩 경험</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        nav.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1a2e;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #1a1a2e;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(-10%, -10%) rotate(0deg); }
+            100% { transform: translate(-10%, -10%) rotate(360deg); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            padding: 0 2rem;
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 0.6s forwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Section Common Styles */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title p {
+            color: #666;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* What is Vibe Coding Section */
+        .what-is {
+            background: #f8f9ff;
+        }
+
+        .what-is-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .what-is-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a2e;
+        }
+
+        .what-is-text p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .code-demo {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot:nth-child(1) { background: #ff5f56; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #27ca40; }
+
+        .code-content {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-user {
+            color: #9cdcfe;
+        }
+
+        .code-ai {
+            color: #ce9178;
+        }
+
+        .code-result {
+            color: #dcdcaa;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: #667eea;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #1a1a2e;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            background: linear-gradient(180deg, #f8f9ff 0%, white 100%);
+        }
+
+        .steps-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.6s ease;
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .step:nth-child(even) {
+            flex-direction: row-reverse;
+            transform: translateX(50px);
+        }
+
+        .step:nth-child(even).visible {
+            transform: translateX(0);
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 0.5rem;
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a2e;
+        }
+
+        .step-content p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d4a 100%);
+            color: white;
+        }
+
+        .benefits .section-title h2 {
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .benefits .section-title p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .benefits-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-item {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .benefit-item.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .benefit-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-item p {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #667eea;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            font-size: 1.5rem;
+            color: #1a1a2e;
+            text-decoration: none;
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .what-is-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .code-demo {
+                order: -1;
+            }
+
+            .step {
+                flex-direction: column !important;
+                text-align: center;
+                transform: translateY(50px) !important;
+            }
+
+            .step.visible {
+                transform: translateY(0) !important;
+            }
+
+            .step-number {
+                margin: 0 auto;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 1rem;
+            }
+
+            section {
+                padding: 4rem 1rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">VIBE CODING</div>
+        <ul class="nav-links">
+            <li><a href="#what-is">소개</a></li>
+            <li><a href="#features">특징</a></li>
+            <li><a href="#how-it-works">사용법</a></li>
+            <li><a href="#benefits">장점</a></li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" onclick="toggleMenu()">&times;</button>
+        <a href="#what-is" onclick="toggleMenu()">소개</a>
+        <a href="#features" onclick="toggleMenu()">특징</a>
+        <a href="#how-it-works" onclick="toggleMenu()">사용법</a>
+        <a href="#benefits" onclick="toggleMenu()">장점</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>바이브 코딩</h1>
+            <p>말로 설명하면 AI가 코딩합니다.<br>상상을 현실로, 아이디어를 코드로.</p>
+            <div class="cta-buttons">
+                <a href="#what-is" class="btn btn-primary">시작하기</a>
+                <a href="#features" class="btn btn-secondary">더 알아보기</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- What is Vibe Coding Section -->
+    <section class="what-is" id="what-is">
+        <div class="section-title">
+            <h2>바이브 코딩이란?</h2>
+            <p>코드 문법 대신 자연어로 대화하며 프로그램을 만드는 새로운 개발 방식</p>
+        </div>
+        <div class="what-is-content">
+            <div class="what-is-text">
+                <h3>분위기(Vibe)에 몸을 맡기세요</h3>
+                <p>바이브 코딩은 Andrej Karpathy가 제안한 새로운 프로그래밍 패러다임입니다. 기존의 코딩처럼 문법을 외우고 타이핑하는 대신, AI에게 원하는 것을 자연스럽게 설명하면 됩니다.</p>
+                <p>"코드를 작성하지 마세요. 코드를 설명하세요."</p>
+                <p>더 이상 세미콜론이나 괄호 위치를 고민할 필요가 없습니다. 창의적인 아이디어에만 집중하세요. 나머지는 AI가 해결해 드립니다.</p>
+            </div>
+            <div class="code-demo">
+                <div class="code-header">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                </div>
+                <div class="code-content">
+                    <p class="code-comment">// 바이브 코딩 대화 예시</p>
+                    <br>
+                    <p class="code-user">👤 "사용자가 할 일을 추가하고 삭제할 수 있는 앱을 만들어줘"</p>
+                    <br>
+                    <p class="code-ai">🤖 "네, React로 Todo 앱을 만들겠습니다. 상태 관리와 로컬 스토리지 저장 기능도 추가할까요?"</p>
+                    <br>
+                    <p class="code-user">👤 "좋아, 그리고 완료된 항목은 취소선으로 표시해줘"</p>
+                    <br>
+                    <p class="code-result">✨ 완성된 Todo 앱이 생성되었습니다!</p>
+                    <span class="typing-cursor"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>주요 특징</h2>
+            <p>바이브 코딩이 가져다주는 혁신적인 변화</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>자연어 프로그래밍</h3>
+                <p>일상적인 대화처럼 원하는 기능을 설명하세요. 복잡한 문법을 몰라도 프로그램을 만들 수 있습니다.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>초고속 개발</h3>
+                <p>몇 시간 걸리던 작업을 몇 분 만에 완성하세요. 아이디어에서 프로토타입까지 순식간에 도달합니다.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>창의성에 집중</h3>
+                <p>반복적인 코딩 작업은 AI에게 맡기고, 여러분은 창의적인 문제 해결에만 집중하세요.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>실시간 반복</h3>
+                <p>"이 부분 수정해줘"라고 말하면 즉시 반영됩니다. 빠른 피드백 루프로 완벽한 결과물을 만드세요.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>학습 곡선 최소화</h3>
+                <p>프로그래밍 언어를 배우지 않아도 됩니다. 논리적 사고력만 있으면 누구나 개발자가 될 수 있습니다.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>오류 자동 수정</h3>
+                <p>버그가 발생하면 AI가 자동으로 분석하고 수정합니다. 디버깅에 쓰는 시간을 절약하세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-title">
+            <h2>어떻게 사용하나요?</h2>
+            <p>단 4단계로 아이디어를 실현하세요</p>
+        </div>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>아이디어 설명</h3>
+                    <p>만들고 싶은 것을 자연스럽게 설명하세요. "쇼핑몰 사이트를 만들고 싶어" 처럼 간단하게 시작해도 좋습니다.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>AI와 대화</h3>
+                    <p>AI가 추가 질문을 하면 원하는 바를 더 구체적으로 알려주세요. 마치 동료 개발자와 대화하듯이요.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>결과 확인</h3>
+                    <p>AI가 생성한 코드와 결과물을 확인하세요. 실시간으로 동작하는 프리뷰를 볼 수 있습니다.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>반복 개선</h3>
+                    <p>수정이 필요하면 말로 설명하세요. "버튼을 더 크게", "색상을 파란색으로" 등 원하는 대로 조정합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits" id="benefits">
+        <div class="section-title">
+            <h2>왜 바이브 코딩인가요?</h2>
+            <p>숫자로 보는 바이브 코딩의 효과</p>
+        </div>
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="benefit-number">10x</div>
+                <h4>개발 속도 향상</h4>
+                <p>기존 대비 10배 빠른 개발</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">90%</div>
+                <h4>진입 장벽 감소</h4>
+                <p>비전공자도 쉽게 시작</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">24/7</div>
+                <h4>항상 사용 가능</h4>
+                <p>언제든 AI 파트너와 함께</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">∞</div>
+                <h4>무한한 가능성</h4>
+                <p>상상하는 모든 것을 구현</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>지금 바로 시작하세요</h2>
+        <p>바이브 코딩으로 당신의 아이디어에 생명을 불어넣으세요</p>
+        <a href="#what-is" class="btn btn-primary">무료로 체험하기</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">VIBE CODING</div>
+            <div class="footer-links">
+                <a href="#what-is">소개</a>
+                <a href="#features">특징</a>
+                <a href="#how-it-works">사용법</a>
+                <a href="#benefits">장점</a>
+            </div>
+            <p class="copyright">© 2024 Vibe Coding. 말로 코딩하는 새로운 시대.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card').forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(card);
+        });
+
+        // Observe steps
+        document.querySelectorAll('.step').forEach((step, index) => {
+            step.style.transitionDelay = `${index * 0.2}s`;
+            observer.observe(step);
+        });
+
+        // Observe benefit items
+        document.querySelectorAll('.benefit-item').forEach((item, index) => {
+            item.style.transitionDelay = `${index * 0.15}s`;
+            observer.observe(item);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for hero background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.backgroundPositionY = `${scrolled * 0.5}px`;
+            }
+        });
+
+        // Animate numbers in benefits section
+        const animateNumber = (element, target, suffix = '') => {
+            const duration = 2000;
+            const start = 0;
+            const startTime = performance.now();
+
+            const animate = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (target - start) * easeOut);
+
+                element.textContent = current + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    element.textContent = target + suffix;
+                }
+            };
+
+            requestAnimationFrame(animate);
+        };
+
+        // Observe benefits for number animation
+        const benefitNumbers = document.querySelectorAll('.benefit-number');
+        const numbersObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.animated) {
+                    entry.target.dataset.animated = 'true';
+                    const text = entry.target.textContent;
+
+                    if (text.includes('x')) {
+                        animateNumber(entry.target, 10, 'x');
+                    } else if (text.includes('%')) {
+                        animateNumber(entry.target, 90, '%');
+                    } else if (text.includes('/')) {
+                        entry.target.textContent = '24/7';
+                    } else if (text.includes('∞')) {
+                        entry.target.textContent = '∞';
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        benefitNumbers.forEach(num => numbersObserver.observe(num));
+    </script>
+</body>
+</html>
